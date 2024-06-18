@@ -2,21 +2,30 @@
 import courseData from "@/data/music_courses.json";
 import Link from "next/link";
 import { BackgroundGradient } from "./ui/background-gradient";
+
 interface Course {
-  id: number;
+  id: string; // Change from number to string
   title: string;
   description: string;
   price: number;
+  image: string; // Add image to the Course interface
   instructor: string;
   duration: string;
   level: string;
   rating: number;
   category: string;
   isFeatured: boolean;
+  slug: string; // Add slug to the Course interface
 }
 
+interface CourseData {
+  courses: Course[];
+}
+
+const courseDataTyped: CourseData = courseData as CourseData; // Explicitly type the imported JSON
+
 function FeaturedCourses() {
-  const featuredCourses = courseData.courses.filter(
+  const featuredCourses = courseDataTyped.courses.filter(
     (course: Course) => course.isFeatured
   );
 
@@ -27,7 +36,7 @@ function FeaturedCourses() {
           <h2 className="text-base text-teal-600 font-semibold tracking-wide uppercase">
             FEATURED COURSES
           </h2>
-          <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight sm:text-4xl">
+          <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight sm:text-4xl text-white">
             Learn with the Best
           </p>
         </div>
@@ -41,14 +50,17 @@ function FeaturedCourses() {
                   {course.title}
                 </p>
                 <p className="text-sm text-neutral-600 dark:text-neutral-400">
-          {course.description}
-        </p>
-        <Link href={`/courses/${course.slug}`} className="rounded-full pl-4 pr-1 py-1 text-white flex items-center space-x-1 bg-black mt-4 text-xs font-bold dark:bg-zinc-800">
-        Learn More
-        <span className="bg-zinc-700 rounded-full text-[0.6rem] px-2 py-0 text-white">
-            {`$ ${course.price}`}
-          </span>
-        </Link >
+                  {course.description}
+                </p>
+                <Link
+                  href={`/courses/${course.id}`} // Adjust href to use id instead of slug
+                  className="rounded-full pl-4 pr-1 py-1 text-white flex items-center space-x-1 bg-black mt-4 text-xs font-bold dark:bg-zinc-800"
+                >
+                  Learn More
+                  <span className="bg-zinc-700 rounded-full text-[0.6rem] px-2 py-0 text-white">
+                    {`$ ${course.price}`}
+                  </span>
+                </Link>
               </BackgroundGradient>
             </div>
           ))}
